@@ -1,0 +1,21 @@
+header {
+  background-color: #282c34;
+  padding: calc(10px);
+  text-align: center;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin: calc(20px) calc(40px) 0;
+}
+
+.wireframe {
+  img {
+    display: block;
+    width: 100%;
+  }
+}
