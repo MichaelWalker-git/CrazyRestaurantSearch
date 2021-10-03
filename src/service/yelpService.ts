@@ -10,7 +10,8 @@ return fetch(`${process.env.REACT_APP_PROXY_DOMAIN}yelp/v3/businesses/search?loc
     .then((res: any) => res.json())
     .then(
       (result) => {
-        console.log(result);
+        console.log("result", result)
+        return result;
       },
 
       (error) => {

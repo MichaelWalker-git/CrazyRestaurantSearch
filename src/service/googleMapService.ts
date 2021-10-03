@@ -1,11 +1,10 @@
 
 export const getLocationAutoComplete = (location: string) => {
-    
-    return fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/autocomplete/json?input=${location}&key=${process.env.REACT_APP_GOOGLE_API}`)      
+    return fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/autocomplete/json?input=${location}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`)      
         .then((res: any) => res.json())
         .then(
           (result) => {
-            console.log(result);
+            return result;
           },
     
           (error) => {
