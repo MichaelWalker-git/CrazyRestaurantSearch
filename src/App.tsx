@@ -5,16 +5,50 @@ import { getYelpResults } from './service/yelpService';
 import { getLocationAutoComplete } from './service/googleMapService';
 
 import debounce from 'lodash.debounce';
-import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap';
+import { Button, Card, Col, Container, Dropdown, FormControl, InputGroup, Row } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import {YelpBusiness} from './types';
+import { YelpBusiness } from './types';
+
+const BusinessResult = (props: any) => {
+  const { name, location, rating, image_url, url, review_count } = props.yelpBiz;
+  
+  //TODO(miketran): Google reviews
+  //TODO(miketran): Restaurant website
+  return (
+    <>
+      <Card>
+  <h4>{name} : {location.address1} - <a href={"website"}>{"website"}</a> </h4>
+        <Card.Body>
+        <Container>
+          <Row>
+            <Col>
+  <h5>Yelp Rating: {rating} of 5 stars ({review_count} total reviews)</h5>
+              <Card.Img variant="top" src={image_url}/>
+            </Col>
+            <Col>
+            <h5>Google Rating: {rating} of 5 stars ({review_count} total reviews)</h5>
+              <Card.Img variant="top" src={image_url}/>
+              </Col>
+          </Row>
+        </Container>
+
+        </Card.Body>
+      </Card>
+      <Dropdown.Divider />
+
+    </>
+  )
+}
 
 //TODO(miketran): Add Correct Type
 const SearchResultBody = (props: any) => {
-  console.log(props.searchResults, "?")
+
+  // join yelp and google data
   return (
     <div>
-
+      {props.searchResults.length > 0 && props.searchResults.map((biz: YelpBusiness) => {
+        return (<BusinessResult yelpBiz={biz} key={biz.id} />)
+      })}
     </div>
   );
 }
@@ -91,7 +125,6 @@ function App() {
   }, [])
 
   const handleSearchResults = (searchResultQuery: Array<YelpBusiness>) => {
-    // setSearchResults(searchResults);
     console.log(searchResultQuery, "!!")
   }
 
