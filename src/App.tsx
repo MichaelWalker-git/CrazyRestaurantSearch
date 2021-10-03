@@ -1,6 +1,8 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.png';
 import './App.scss';
+import { getYelpResults } from './service/yelpService';
+import { getLocationAutoComplete } from './service/googleMapService';
 
 function SearchResultBody() {
   return (
@@ -11,36 +13,54 @@ function SearchResultBody() {
 }
 
 function SearchBar() {
-  return null;
+
+
+  const [query, setQuery] = useState('');
+
+  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+    console.log(event.target.value);
+    getLocationAutoComplete(event.target.value)
+  };
+
+  const handleSearch = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    evt.preventDefault();
+    getYelpResults("san francisco", "chinese")
+  }
+
+  return (
+    <div>
+      <input type='text'
+
+      ></input>
+      <input
+        onChange={changeHandler}
+        type="text"
+        placeholder="Type a query..."
+      />
+      <button onClick={handleSearch}>Search</button>
+    </div>
+  );
 }
 
 function App() {
 
   useEffect(() => {
-    fetch("")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result);
-        },
+    getYelpResults("San Francisco", "chinese")
 
-        (error) => {
-          console.error(error);
-        }
-      )
   }, [])
 
   return (
     <div className="App">
       <header>
-        <a href="https://www.intellimize.com/" target="_blank"  rel="noopener noreferrer">
+        <a href="https://www.intellimize.com/" target="_blank" rel="noopener noreferrer">
           <img src={logo} alt="logo" />
         </a>
       </header>
       <main>
         <div>
-          <SearchBar/>
-          <SearchResultBody/>
+          <SearchBar />
+          <SearchResultBody />
         </div>
       </main>
     </div>
