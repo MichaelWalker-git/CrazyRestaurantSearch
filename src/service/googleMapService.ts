@@ -20,7 +20,7 @@ export const getLatLong = async (locationQuery: string) => {
 
 export const getGoogleRestaurantResults = async (latLong: string, query: string) => {
   try {
-    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/textsearch/json?input=${query}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`);
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/nearbysearch/json?input=${query}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`);
     return res.json();
   } catch (error) {
     console.error("getGoogleRestaurantResults", error);
