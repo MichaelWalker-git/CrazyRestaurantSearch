@@ -97,7 +97,7 @@ function SearchBar(props: SearchBarProps) {
   //TODO(miketran): Validation of inputs.
   /**
    * Kicks off search when both inputs are inputted.
-   * @param evt 
+   * @param evt
    */
   const handleSearch = (evt: any) => {
     evt.preventDefault();
@@ -170,7 +170,7 @@ function App() {
           <img src={logo} alt="logo" />
         </a>
       </header>
-      <main>
+      <main className={"mainBody"}>
         <div>
           <SearchBar handleSearchResults={handleSearchResults}
             searchBoxTerm={searchTerm}
