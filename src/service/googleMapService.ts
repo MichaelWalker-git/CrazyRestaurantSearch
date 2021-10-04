@@ -15,13 +15,20 @@ export const getLatLong = async (locationQuery: string) => {
   } catch (error) {
     console.error("getLatLong", error);
   }
-
 }
 
 export const getGoogleRestaurantResults = async (latLong: string, query: string) => {
   try {
-    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/textsearch/json?input=${query}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`);
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/nearbysearch/json?keyword=${query}&location=${latLong}&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}&key=${process.env.REACT_APP_GOOGLE_API}`);
     return res.json();
+  } catch (error) {
+    console.error("getGoogleRestaurantResults", error);
+  }
+}
+
+export const getGooglePhotoRef = async (photoRef: string) => {
+  try {
+    return await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/photo?maxwidth=400&photo_reference=${photoRef}&key=${process.env.REACT_APP_GOOGLE_API}`);
   } catch (error) {
     console.error("getGoogleRestaurantResults", error);
   }
