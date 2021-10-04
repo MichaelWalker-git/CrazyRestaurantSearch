@@ -1,12 +1,12 @@
-import React, { createRef, Ref, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, createRef, Ref, useEffect, useMemo, useState } from 'react';
 import logo from './logo.png';
 import './App.scss';
 import { getYelpResults } from './service/yelpService';
-import { getLocationAutoComplete } from './service/googleMapService';
+import { getLatLong, getLocationAutoComplete } from './service/googleMapService';
 
 import debounce from 'lodash.debounce';
 import { Button, Card, Col, Container, Dropdown, FormControl, InputGroup, Row } from 'react-bootstrap';
-import { AsyncTypeahead, Typeahead } from 'react-bootstrap-typeahead';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { GoogleAutoCompletePrediction, YelpBusiness } from './types';
 import { Type } from 'typescript';
 
@@ -47,18 +47,25 @@ const SearchResultBody = (props: any) => {
   // join yelp and google data
   return (
     <div>
-      {props.searchResults.length > 0 && props.searchResults.map((biz: YelpBusiness) => {
+      {props.searchResults?.length > 0 && props.searchResults.map((biz: YelpBusiness) => {
         return (<BusinessResult yelpBiz={biz} key={biz.id} />)
       })}
     </div>
   );
 }
 
-function SearchBar(props: any) {
+interface SearchBarProps {
+  handleSearchResults: (a: Array<YelpBusiness>) => void;
+  latLong: Array<string>;
+  searchAreaTerm: Array<string>;
+  searchBoxTerm: string;
+  setLatLongValues: (a: Array<string>) => void;
+  setSearchAreaValues: (a: Array<string>) => void;
+  setSearchTermValues: (a: string) => void;
+}
 
-  const [query, setQuery] = useState('');
+function SearchBar(props: SearchBarProps) {
   const [options, setCityOptions] = useState([]);
-  const [selectedCity, changeSelectedCity] = useState(['San Francisco, CA'])
   const [isLoading, setLoading] = useState(false);
 
   const selectLocationDropdown = createRef<AsyncTypeahead<string>>();
@@ -67,30 +74,36 @@ function SearchBar(props: any) {
     setLoading(true);
     getLocationAutoComplete(locationText).then((res) => {
       const formattedData = res.predictions
-      .map((val: GoogleAutoCompletePrediction) => val.description);
+        .map((val: GoogleAutoCompletePrediction) => val.description);
       setCityOptions(formattedData);
     })
-    .finally(() => setLoading(false));
+      .finally(() => setLoading(false));
   };
 
-  const debouncedChangeHandler = useMemo(
-    () => debounce(changeHandler, 300)
-    , []);
-
+  const debouncedChangeHandler = useMemo(() => debounce(changeHandler, 300), []);
 
   const handleMenuClose = (menuOpen: boolean) => {
-    if (!menuOpen) {
-      const selectedVal = selectLocationDropdown.current?.getInput().value;
-      changeSelectedCity([selectedVal || selectedCity[0]]);
-      console.log("menu selectedCity", selectedCity, selectedVal);
+    const selectedVal = selectLocationDropdown.current?.getInput().value;
+
+    if (!menuOpen && selectedVal) {
+      props.setSearchAreaValues([selectedVal || props.searchAreaTerm[0]]);
+      getLatLong(selectedVal).then((res) => {
+        const { lng, lat } = res.results[0].geometry.location;
+        props.setLatLongValues([lng, lat]);
+      });
     }
   }
 
+  //TODO(miketran): Validation of inputs.
+  /**
+   * Kicks off search when both inputs are inputted.
+   * @param evt 
+   */
   const handleSearch = (evt: any) => {
     evt.preventDefault();
-    console.log(evt, "handleSearch")
+    console.log(props.searchAreaTerm, "handleSearch", props)
 
-    getYelpResults("san francisco", "chinese").then((res) => {
+    getYelpResults(props.searchBoxTerm, props.latLong[0], props.latLong[1]).then((res) => {
       props.handleSearchResults(res.businesses)
     })
   }
@@ -104,17 +117,20 @@ function SearchBar(props: any) {
       <InputGroup.Text>Find:</InputGroup.Text>
       <FormControl
         placeholder="Find..."
-        aria-label="Recipient's username"
+        aria-label="Find what?"
         aria-describedby="basic-addon2"
+        type={"text"}
+        value={props.searchBoxTerm}
+        onChange={(evt) => props.setSearchTermValues(evt.target.value)}
       />
       <InputGroup.Text>Nearby:</InputGroup.Text>
       <AsyncTypeahead
-        defaultSelected={selectedCity}
+        defaultSelected={props.searchAreaTerm}
         id="selections-example"
         onSearch={(text: string) => { debouncedChangeHandler(text); }}
         options={options}
         ref={selectLocationDropdown}
-        placeholder="Choose a state..."
+        placeholder="Choose a city..."
         isLoading={isLoading}
         onMenuToggle={handleMenuClose}
         onFocus={clearLocationInput}
@@ -128,45 +144,41 @@ function SearchBar(props: any) {
   );
 }
 
-/**
- *       {/* <input type='text'
-      ></input>
-      <input
-        onChange={debouncedChangeHandler}
-        type="text"
-        placeholder="Type a query..."
-      />
-      <button onClick={handleSearch}>Search</button> */
-
 function App() {
-
-  const [searchTerm, setSearchTerm] = useState("restaurants");
-  const [searchArea, setSearchArea] = useState("San Francisco, CA")
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("Restaurants");
+  const [searchArea, setSearchArea] = useState(["San Francisco, CA"])
+  const [searchResults, setSearchResults] = useState<Array<YelpBusiness>>([]);
+  const [latLongSelectedCity, setLatLong] = useState(["-122.4194", "37.7749"]);
 
   useEffect(() => {
     Promise.all([
-      getYelpResults(searchArea, searchTerm),
-
+      getYelpResults(searchTerm, latLongSelectedCity[0], latLongSelectedCity[1]),
     ]).then((res) => {
       setSearchResults(res[0].businesses);
     })
   }, [])
 
-  const handleSearchResults = (searchResultQuery: Array<YelpBusiness>) => {
-    console.log(searchResultQuery, "!!")
+  const handleSearchResults = (searchResultFromButton: Array<YelpBusiness>) => {
+    setSearchResults(searchResultFromButton);
   }
 
   return (
     <div className="App">
       <header>
-        <a href="https://www.intellimize.com/" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.intellimize.com/" target="_blank"
+          rel="noopener noreferrer">
           <img src={logo} alt="logo" />
         </a>
       </header>
       <main>
         <div>
-          <SearchBar handleSearchResults={handleSearchResults} />
+          <SearchBar handleSearchResults={handleSearchResults}
+            searchBoxTerm={searchTerm}
+            searchAreaTerm={searchArea}
+            latLong={latLongSelectedCity}
+            setSearchAreaValues={setSearchArea}
+            setLatLongValues={setLatLong}
+            setSearchTermValues={setSearchTerm} />
           <h2>Showing {searchTerm} near {searchArea} </h2>
           <Dropdown.Divider />
           <SearchResultBody searchResults={searchResults} />

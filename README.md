@@ -147,3 +147,31 @@ npm run convert-to-typescript
 ```
 
 See the section in this `README` on TypeScript for more information about why this script exists.
+
+
+
+# Design Document for API calls
+
+- The search bar will autocomplete a city or address, using the google places API
+- We will then make a query for Yelp
+
+## Option 1: Query Google Places for search results for that cuisine + location
+
+### Pros: 
+- 2 API calls
+- Stich together the data and showcase that onto the page
+### Cons:
+- Missing data point from Google
+
+Yelp API needs: city and term
+Google API
+
+
+## Option 2: Query each yelp result to Google places to find the reviews, google rating and google image
+### Pros: 
+- Accurate
+
+### Cons:
+- Slow
+- Iterate through n number of Yelp results
+- n number of API calls

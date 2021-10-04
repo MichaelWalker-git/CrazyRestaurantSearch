@@ -1,22 +1,15 @@
-export const getYelpResults = (location: string, searchTerm: string) => {
+export const getYelpResults = async (searchTerm: string, long: string, lat: string) => {
 
 const requestHeaders = {
 'headers': {
     'Authorization': `Bearer ${process.env.REACT_APP_YELP_API}`
     }
 }  
-
-return fetch(`${process.env.REACT_APP_PROXY_DOMAIN}yelp/v3/businesses/search?location=${location}&term=${searchTerm}`, requestHeaders)      
-    .then((res: any) => res.json())
-    .then(
-      (result) => {
-        console.log("result", result)
-        return result;
-      },
-
-      (error) => {
-        console.error(error);
-      }
-    )
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}yelp/v3/businesses/search?latitude=${lat}&longitude=${long}&term=${searchTerm}&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}`, requestHeaders);
+    const result = res.json();
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
 }
