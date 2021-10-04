@@ -55,9 +55,7 @@ Below you can find links to documentation as well as the authorization keys need
 The API Key will grant access to the [Yelp Fusion Business Search API](https://www.yelp.com/developers/documentation/v3/business_search)
 
 ##### API Key
-```
-T4v5tNBDzkrfgj884ugGA8p3Wgi-nZmlxv1KZPudU6ch4DfdPmXBkz3Db1vOEPqx0hxI8Q34iZuGKajX0UxXve0bgSn9yz7j57DtULwA0CgQ_hm-R2u3Rq4vZkI8X3Yx
-```
+
 
 **IMPORTANT:** In order for the APIs to work from the browser, all requests must go through the local node proxy (to circumvent CORS). To do so, replace the Yelp API host with `http://localhost:3000/api/yelp`.
 
@@ -78,9 +76,7 @@ http://localhost:3000/api/yelp/*
 The API Key will grant access to the [Google Places API](https://developers.google.com/maps/documentation/places/web-service/overview) and [Google Geolocation API](https://developers.google.com/maps/documentation/geolocation/overview)
 
 ##### API Key
-```
-AIzaSyAjf7dv23CHDQtTyldde3N3BJpYxXXFnkE
-```
+
 
 **IMPORTANT:** In order for the APIs to work from the browser, all requests must go through the local node proxy (to circumvent CORS). To do so, replace the Google API host with `http://localhost:3000/api/google`.
 
