@@ -37,3 +37,9 @@ export interface YelpBusiness {
     transactions: Array<string>;
     url: string;
 }
+
+export interface GoogleAutoCompletePrediction {
+    description: string;
+    place_id: string;
+    reference: string;
+}

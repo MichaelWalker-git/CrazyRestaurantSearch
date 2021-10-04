@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { createRef, Ref, useEffect, useMemo, useState } from 'react';
 import logo from './logo.png';
 import './App.scss';
 import { getYelpResults } from './service/yelpService';
@@ -6,31 +6,32 @@ import { getLocationAutoComplete } from './service/googleMapService';
 
 import debounce from 'lodash.debounce';
 import { Button, Card, Col, Container, Dropdown, FormControl, InputGroup, Row } from 'react-bootstrap';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import { YelpBusiness } from './types';
+import { AsyncTypeahead, Typeahead } from 'react-bootstrap-typeahead';
+import { GoogleAutoCompletePrediction, YelpBusiness } from './types';
+import { Type } from 'typescript';
 
 const BusinessResult = (props: any) => {
-  const { name, location, rating, image_url, url, review_count } = props.yelpBiz;
-  
+  const { name, location, rating, image_url, review_count } = props.yelpBiz;
+
   //TODO(miketran): Google reviews
   //TODO(miketran): Restaurant website
   return (
     <>
       <Card>
-  <h4>{name} : {location.address1} - <a href={"website"}>{"website"}</a> </h4>
+        <h4>{name} : {location.address1} - <a href={"website"}>{"website"}</a> </h4>
         <Card.Body>
-        <Container>
-          <Row>
-            <Col>
-  <h5>Yelp Rating: {rating} of 5 stars ({review_count} total reviews)</h5>
-              <Card.Img variant="top" src={image_url}/>
-            </Col>
-            <Col>
-            <h5>Google Rating: {rating} of 5 stars ({review_count} total reviews)</h5>
-              <Card.Img variant="top" src={image_url}/>
+          <Container>
+            <Row>
+              <Col>
+                <h5>Yelp Rating: {rating} of 5 stars ({review_count} total reviews)</h5>
+                <Card.Img variant="top" src={image_url} />
               </Col>
-          </Row>
-        </Container>
+              <Col>
+                <h5>Google Rating: {rating} of 5 stars ({review_count} total reviews)</h5>
+                <Card.Img variant="top" src={image_url} />
+              </Col>
+            </Row>
+          </Container>
 
         </Card.Body>
       </Card>
@@ -58,23 +59,44 @@ function SearchBar(props: any) {
   const [query, setQuery] = useState('');
   const [options, setCityOptions] = useState([]);
   const [selectedCity, changeSelectedCity] = useState(['San Francisco, CA'])
+  const [isLoading, setLoading] = useState(false);
 
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-    console.log(event.target.value);
-    getLocationAutoComplete(event.target.value);
+  const selectLocationDropdown = createRef<AsyncTypeahead<string>>();
+
+  const changeHandler = (locationText: string) => {
+    setLoading(true);
+    getLocationAutoComplete(locationText).then((res) => {
+      const formattedData = res.predictions
+      .map((val: GoogleAutoCompletePrediction) => val.description);
+      setCityOptions(formattedData);
+    })
+    .finally(() => setLoading(false));
   };
 
   const debouncedChangeHandler = useMemo(
     () => debounce(changeHandler, 300)
     , []);
 
-  const handleSearch = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
+  const handleMenuClose = (menuOpen: boolean) => {
+    if (!menuOpen) {
+      const selectedVal = selectLocationDropdown.current?.getInput().value;
+      changeSelectedCity([selectedVal || selectedCity[0]]);
+      console.log("menu selectedCity", selectedCity, selectedVal);
+    }
+  }
+
+  const handleSearch = (evt: any) => {
     evt.preventDefault();
+    console.log(evt, "handleSearch")
 
     getYelpResults("san francisco", "chinese").then((res) => {
       props.handleSearchResults(res.businesses)
     })
+  }
+
+  const clearLocationInput = () => {
+    selectLocationDropdown.current?.clear();
   }
 
   return (
@@ -86,12 +108,16 @@ function SearchBar(props: any) {
         aria-describedby="basic-addon2"
       />
       <InputGroup.Text>Nearby:</InputGroup.Text>
-      <Typeahead
+      <AsyncTypeahead
         defaultSelected={selectedCity}
         id="selections-example"
-        onInputChange={(text: String, e: Event) => { console.log(text, e); }}
+        onSearch={(text: string) => { debouncedChangeHandler(text); }}
         options={options}
+        ref={selectLocationDropdown}
         placeholder="Choose a state..."
+        isLoading={isLoading}
+        onMenuToggle={handleMenuClose}
+        onFocus={clearLocationInput}
       />
       <Button
         variant="outline-secondary"
@@ -119,8 +145,11 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    getYelpResults(searchArea, searchTerm).then((res) => {
-      setSearchResults(res.businesses);
+    Promise.all([
+      getYelpResults(searchArea, searchTerm),
+
+    ]).then((res) => {
+      setSearchResults(res[0].businesses);
     })
   }, [])
 

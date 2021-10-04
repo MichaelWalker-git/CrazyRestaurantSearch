@@ -1,21 +1,28 @@
 
-export const getLocationAutoComplete = (location: string) => {
-    return fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/autocomplete/json?input=${location}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`)      
-        .then((res: any) => res.json())
-        .then(
-          (result) => {
-            return result;
-          },
-    
-          (error) => {
-            console.error(error);
-          }
-        )
-        .catch((err) => console.error(err));
-    }
+export const getLocationAutoComplete = async (locationText: string) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/autocomplete/json?input=${locationText}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`);
+    return res.json();
+  } catch (error) {
+    console.error("getLocationAutoComplete", error);
+  }
+}
 
+export const getLatLong = async (locationQuery: string) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/textsearch/json?query=${locationQuery}&key=${process.env.REACT_APP_GOOGLE_API}`);
+    return res.json();
+  } catch (error) {
+    console.error("getLatLong", error);
+  }
 
+}
 
-export const getGoogleRestaurantResults = () => {
-    return fetch(`${process.env.PROXY_DOMAIN}/google/*`)
+export const getGoogleRestaurantResults = async (latLong: string, query: string) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/textsearch/json?input=${query}&types=(cities)&key=${process.env.REACT_APP_GOOGLE_API}`);
+    return res.json();
+  } catch (error) {
+    console.error("getGoogleRestaurantResults", error);
+  }
 }
