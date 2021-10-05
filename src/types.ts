@@ -31,7 +31,7 @@ export interface YelpBusiness {
   location: YelpBusAddress;
   name: string;
   phone: string;
-  price: string;
+  price?: string;
   rating: number
   review_count: Number;
   transactions: Array<string>;
@@ -52,12 +52,7 @@ export interface GoogleBusiness {
   icon_mask_base_uri: string;
   name: string;
   opening_hours: { open_now: boolean }
-  photos: [{
-    height: number;
-    html_attributions: Array<string>;
-    photo_reference: string;
-    width: number;
-  }]
+  photos: Array<GoogleBusinessPhotos>
   place_id: string;
   plus_code: { compound_code: string, global_code: string }
   price_level: number;
@@ -67,4 +62,11 @@ export interface GoogleBusiness {
   types: Array<string>
   user_ratings_total: number
   vicinity: string;
+}
+
+interface GoogleBusinessPhotos {
+  height: number;
+  html_attributions: Array<string>;
+  photo_reference: string;
+  width: number;
 }

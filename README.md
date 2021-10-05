@@ -1,5 +1,17 @@
 # Intellimize Frontend Engineering Simulation
 
+### Getting Started
+- Pull down package
+- Gather required environment variables for .env file
+   - REACT_APP_PROXY_DOMAIN
+   - REACT_APP_YELP_API
+   - REACT_APP_GOOGLE_API
+   - REACT_APP_DEFAULT_RADIUS_METERS
+- Run ```npm run start``` on root directory
+
+### Preview
+<img width="1224" alt="Screen Shot 2021-10-04 at 8 14 38 PM" src="https://user-images.githubusercontent.com/11032490/135954396-cb14c478-8041-45ce-8633-e9a94982b4b6.png">
+
 For this exercise, you will be creating a mini React web application to display search results from Yelp’s Business Search API and Google’s Places API to provide a side-by-side comparison of local businesses.
 
 ## Requirements
