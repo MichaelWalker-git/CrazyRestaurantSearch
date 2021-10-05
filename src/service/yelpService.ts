@@ -6,7 +6,7 @@ const requestHeaders = {
     }
 }
   try {
-    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}yelp/v3/businesses/search?latitude=${lat}&longitude=${long}&term=${searchTerm}&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}`, requestHeaders);
+    const res = await fetch(`${window.location.href}/api/yelp/v3/businesses/search?latitude=${lat}&longitude=${long}&term=${searchTerm}&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}`, requestHeaders);
     return res.json();
   } catch (error) {
     console.error(error);
