@@ -2,9 +2,12 @@ import {GoogleBusiness, YelpBusiness} from "../types";
 import React from "react";
 import { BusinessResult } from './BusinessResult';
 
- //TODO(miketran): Add Correct Type
-export const SearchResultBody = (props: any) => {
-  console.log(props, "PROPS in SearchResultBody")
+interface SearchResultBodyProps {
+  searchResults: Map<string, Array<YelpBusiness | GoogleBusiness>>;
+  callDefaultSearch: () => void;
+}
+
+export const SearchResultBody = (props: SearchResultBodyProps) => {
   return (
     <div>
       {props.searchResults?.size > 0 &&
@@ -15,6 +18,13 @@ export const SearchResultBody = (props: any) => {
             key={bizTupal[0].id} />
         )})
       }
+      {props.searchResults?.size === 0 && (
+        <>
+          <span>No results available</span>
+          <div>Try <a href={""} onClick={props.callDefaultSearch}> Restaurants in San Francisco </a>
+          </div>
+        </>
+      )}
     </div>
   );
 }

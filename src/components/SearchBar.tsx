@@ -58,8 +58,8 @@ export const SearchBar = (props: SearchBarProps) => {
       getYelpResults(props.searchBoxTerm, props.latLong[0], props.latLong[1]),
       getGoogleRestaurantResults(`${props.latLong[1]},${props.latLong[0]}`,props.searchBoxTerm )
     ]).then((res) => {
-      const newDataMap = joinDataSources(res);
-      props.handleSearchResults(newDataMap)
+      joinDataSources(res)
+        .then((newDataMap) => props.handleSearchResults(newDataMap));
     })
   }
 

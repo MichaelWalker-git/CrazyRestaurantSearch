@@ -17,13 +17,17 @@ function App() {
   const [searchResults, setSearchResults] = useState<Map<string, Array<YelpBusiness|GoogleBusiness>>>(new Map());
   const [latLongSelectedCity, setLatLong] = useState(["-122.4194", "37.7749"]);
 
-  useEffect(() => {
+  const callYelpAndGoogle = () => {
     Promise.all([
       getYelpResults(searchTerm, latLongSelectedCity[0], latLongSelectedCity[1]),
       getGoogleRestaurantResults(`${latLongSelectedCity[1]},${latLongSelectedCity[0]}`,searchTerm )
-    ]).then((res) => {
-      setSearchResults(joinDataSources(res));
-    })
+    ])
+      .then((res) => joinDataSources(res))
+      .then((mapResult) => setSearchResults(mapResult))
+  }
+
+  useEffect(() => {
+    callYelpAndGoogle();
   }, [])
 
   const handleSearchResults = (searchResultFromButton: Map<string, Array<YelpBusiness|GoogleBusiness>>) => {
@@ -50,7 +54,9 @@ function App() {
             setSearchTermValues={setSearchTerm} />
           <h2>Showing {searchTerm} near {searchArea} </h2>
           <Dropdown.Divider />
-          <SearchResultBody searchResults={searchResults} />
+          <SearchResultBody searchResults={searchResults}
+            callDefaultSearch={callYelpAndGoogle}
+          />
         </div>
       </main>
     </div>

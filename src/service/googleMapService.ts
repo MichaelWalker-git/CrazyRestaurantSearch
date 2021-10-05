@@ -26,9 +26,10 @@ export const getGoogleRestaurantResults = async (latLong: string, query: string)
   }
 }
 
-export const getGooglePhotoRef = async (photoRef: string) => {
+export const getGoogleDetail = async (googlePlaceId: string) => {
   try {
-    return await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/photo?maxwidth=400&photo_reference=${photoRef}&key=${process.env.REACT_APP_GOOGLE_API}`);
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/details/json?place_id=${googlePlaceId}&key=${process.env.REACT_APP_GOOGLE_API}`);
+    return res.json();
   } catch (error) {
     console.error("getGoogleRestaurantResults", error);
   }
