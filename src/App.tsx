@@ -16,14 +16,19 @@ function App() {
   const [searchArea, setSearchArea] = useState(["San Francisco, CA"])
   const [searchResults, setSearchResults] = useState<Map<string, Array<YelpBusiness|GoogleBusiness>>>(new Map());
   const [latLongSelectedCity, setLatLong] = useState(["-122.4194", "37.7749"]);
+  const [isLoading, setLoading] = useState(false);
 
   const callYelpAndGoogle = () => {
+    setLoading(true);
     Promise.all([
       getYelpResults(searchTerm, latLongSelectedCity[0], latLongSelectedCity[1]),
       getGoogleRestaurantResults(`${latLongSelectedCity[1]},${latLongSelectedCity[0]}`,searchTerm )
     ])
       .then((res) => joinDataSources(res))
-      .then((mapResult) => setSearchResults(mapResult))
+      .then((mapResult) => {
+        setLoading(false);
+        setSearchResults(mapResult);
+      })
   }
 
   useEffect(() => {
@@ -56,6 +61,7 @@ function App() {
           <Dropdown.Divider />
           <SearchResultBody searchResults={searchResults}
             callDefaultSearch={callYelpAndGoogle}
+                            isLoading={isLoading}
           />
         </div>
       </main>
