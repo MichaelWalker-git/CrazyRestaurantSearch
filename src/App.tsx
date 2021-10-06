@@ -56,6 +56,7 @@ function App() {
             latLong={latLongSelectedCity}
             setSearchAreaValues={setSearchArea}
             setLatLongValues={setLatLong}
+            callYelpAndGoogle={callYelpAndGoogle}
             setSearchTermValues={setSearchTerm} />
           <h2>Showing {searchTerm} near {searchArea} </h2>
           <Dropdown.Divider />

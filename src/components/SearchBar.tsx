@@ -1,14 +1,13 @@
 import {GoogleAutoCompletePrediction, GoogleBusiness, YelpBusiness} from "../types";
 import React, {createRef, useMemo, useState} from "react";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import {getGoogleRestaurantResults, getLatLong, getLocationAutoComplete} from "../service/googleMapService";
+import {getLatLong, getLocationAutoComplete} from "../service/googleMapService";
 import debounce from "lodash.debounce";
-import {getYelpResults} from "../service/yelpService";
 import {Button, FormControl, InputGroup} from "react-bootstrap";
-import { joinDataSources } from '../utilities';
 
 interface SearchBarProps {
   handleSearchResults: (a: Map<string, Array<YelpBusiness|GoogleBusiness>>) => void;
+  callYelpAndGoogle: () => void;
   latLong: Array<string>;
   searchAreaTerm: Array<string>;
   searchBoxTerm: string;
@@ -54,17 +53,18 @@ export const SearchBar = (props: SearchBarProps) => {
    */
   const handleSearch = (evt: any) => {
     evt.preventDefault();
-    Promise.all([
-      getYelpResults(props.searchBoxTerm, props.latLong[0], props.latLong[1]),
-      getGoogleRestaurantResults(`${props.latLong[1]},${props.latLong[0]}`,props.searchBoxTerm )
-    ]).then((res) => {
-      joinDataSources(res)
-        .then((newDataMap) => props.handleSearchResults(newDataMap));
-    })
+    props.callYelpAndGoogle()
   }
 
   const clearLocationInput = () => {
     selectLocationDropdown.current?.clear();
+  }
+
+  // KeyboardEvent<FormControlElement> was throwing an error
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      handleSearch(e)
+    }
   }
 
   return (
@@ -73,9 +73,11 @@ export const SearchBar = (props: SearchBarProps) => {
       <FormControl
         placeholder="Find..."
         aria-label="Find what?"
+        as={"input"}
         aria-describedby="basic-addon2"
         type={"text"}
         value={props.searchBoxTerm}
+        onKeyDown={handleKeyDown}
         onChange={(evt) => props.setSearchTermValues(evt.target.value)}
       />
       <InputGroup.Text>Nearby:</InputGroup.Text>
