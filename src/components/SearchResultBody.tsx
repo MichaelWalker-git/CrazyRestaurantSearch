@@ -13,7 +13,7 @@ export const SearchResultBody = (props: SearchResultBodyProps) => {
   return (
     <div>
       {props.isLoading && (<Spinner animation="border" />)}
-      {props.searchResults?.size > 0 &&
+      {!props.isLoading && props.searchResults?.size > 0 &&
       [...props.searchResults.values()].map((bizTupal: [YelpBusiness,GoogleBusiness]) => {
         return (<BusinessResult
             yelpBiz={bizTupal[0]}
