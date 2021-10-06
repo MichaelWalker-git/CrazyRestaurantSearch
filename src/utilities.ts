@@ -11,7 +11,7 @@ export const joinDataSources = (res: [{ businesses: Array<YelpBusiness> }, { res
 
 export const fillMapWithYelpData = (yelpResults: Array<YelpBusiness>) => {
   const resultMap = new Map();
-  for (let i = 0; i < yelpResults.length; i++) {
+  for (let i = 0; i < yelpResults?.length; i++) {
     if (yelpResults[i].location.address1?.length > 0) {
       resultMap.set(yelpResults[i].location.address1, [yelpResults[i]]);
     }
@@ -21,7 +21,7 @@ export const fillMapWithYelpData = (yelpResults: Array<YelpBusiness>) => {
 
 export const createdJoinedMapWithGoogleData = async (googleResults: Array<GoogleBusiness>, resultMap: Map<string, Array<YelpBusiness>>): Promise<Map<string, Array<YelpBusiness | GoogleBusiness>>> => {
   const joinedMap = new Map();
-  for (let j = 0; j < googleResults.length; j++) {
+  for (let j = 0; j < googleResults?.length; j++) {
     const firstPartAddress = googleResults[j].vicinity.split(",")[0];
     if (resultMap.has(firstPartAddress)) {
       const currentBizArr = resultMap.get(firstPartAddress);
