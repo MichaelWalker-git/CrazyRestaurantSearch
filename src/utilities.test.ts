@@ -1,5 +1,5 @@
 import {googleData, yelpTestData} from "./testData";
-import {createdJoinedMapWithGoogleData, fillMapWithYelpData} from "./utilities";
+import {createdJoinedMapWithGoogleData, createReadableUrl, fillMapWithYelpData} from "./utilities";
 
 test('fillMapWithYelpData utility', () => {
   const result = fillMapWithYelpData(yelpTestData);
@@ -35,3 +35,28 @@ test('createdJoinedMapWithGoogleData utility - empty', () => {
 
   expect(result).toEqual(actualResultMap);
 });
+
+describe("createReadableUrl for Body Page", () => {
+  test('createReadableUrl utility - http + no wwww', () => {
+    const expectedResult = "richtablesf.com";
+    expect(createReadableUrl("http://richtablesf.com/")).toEqual(expectedResult);
+  });
+
+
+  test('createReadableUrl utility - http + wwww', () => {
+    const expectedResult = "zunicafe.com";
+    expect(createReadableUrl("http://www.zunicafe.com/")).toEqual(expectedResult);
+  });
+
+  test('createReadableUrl utility + https + www', () => {
+    const expectedResult = "nightbirdrestaurant.com";
+    expect(createReadableUrl("https://www.nightbirdrestaurant.com/")).toEqual(expectedResult);
+  });
+
+  test('createReadableUrl utility - https + no www', () => {
+    const expectedResult = "developer.mozilla.org";
+    expect(createReadableUrl("https://developer.mozilla.org/en-US/docs/Web/API/URL/hostname")).toEqual(expectedResult);
+  });
+
+
+})
