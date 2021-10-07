@@ -58,7 +58,7 @@ function App() {
             setLatLongValues={setLatLong}
             callYelpAndGoogle={callYelpAndGoogle}
             setSearchTermValues={setSearchTerm} />
-          <h2>Showing {searchTerm} near {searchArea} </h2>
+          <span className={"headerTitle"}>Showing <b>{searchTerm}</b> near <b>{searchArea}</b> </span>
           <Dropdown.Divider />
           <SearchResultBody searchResults={searchResults}
             callDefaultSearch={callYelpAndGoogle}

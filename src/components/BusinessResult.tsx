@@ -13,9 +13,8 @@ export const BusinessResult = (props: any) => {
         <Card.Body>
           <Container>
             <Row>
-              <Card.Title>{name} : {location.address1} - <a href={website}>{createReadableUrl(website)}</a> </Card.Title>
+              <Card.Title>{name} : {location.address1}, {location.city}, {location.state} {location.zip_code}  - <a href={website}>{createReadableUrl(website)}</a> </Card.Title>
               <Col>
-
                 <Card.Subtitle>Yelp Rating: {rating} of 5 stars ({review_count} total reviews)</Card.Subtitle>
                 <Card.Img variant="top" src={image_url} />
               </Col>

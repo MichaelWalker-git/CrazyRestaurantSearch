@@ -23,7 +23,12 @@ h1 {
 
 img.card-img-top {
   max-width: 25vw;
-  max-height: 17vh;
+  max-height: 24vh;
   display: flex;
   object-fit: cover;
 }
+
+span.headerTitle {
+  font-size: 26px;
+}
+
