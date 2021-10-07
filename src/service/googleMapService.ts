@@ -31,6 +31,15 @@ export const getGoogleDetail = async (googlePlaceId: string) => {
     const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/details/json?place_id=${googlePlaceId}&key=${process.env.REACT_APP_GOOGLE_API}`);
     return res.json();
   } catch (error) {
-    console.error("getGoogleRestaurantResults", error);
+    console.error("getGoogleDetail", error);
+  }
+}
+
+export const getIndividualGoogleRestaurant = async (query: string) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/findplacefromtext/json?input=${query}&inputtype=textquery&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}&key=${process.env.REACT_APP_GOOGLE_API}`);
+    return res.json();
+  } catch (error) {
+    console.error("getIndividualGoogleRestaurant", error);
   }
 }

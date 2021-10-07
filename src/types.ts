@@ -62,6 +62,7 @@ export interface GoogleBusiness {
   types: Array<string>
   user_ratings_total: number
   vicinity: string;
+  website?: string;
 }
 
 interface GoogleBusinessPhotos {
@@ -69,4 +70,13 @@ interface GoogleBusinessPhotos {
   html_attributions: Array<string>;
   photo_reference: string;
   width: number;
+}
+
+export type JoinedYelpGoogleData = Map<string, Array<YelpBusiness|GoogleBusiness>>;
+
+export type UnMatchedYelpMap = Map<string, Array<YelpBusiness>>;
+
+export interface JoinedDataAndUnMatchedData {
+  joinedDataMap: JoinedYelpGoogleData;
+  unMatchedMap: UnMatchedYelpMap;
 }
