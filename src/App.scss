@@ -28,6 +28,12 @@ img.card-img-top {
   object-fit: cover;
 }
 
+@media only screen and (max-width: 600px) {
+  img.card-img-top {
+    max-height: 4rem;
+  }
+}
+
 span.headerTitle {
   font-size: 26px;
 }
