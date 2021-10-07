@@ -27,16 +27,16 @@ function App() {
     ])
       .then((res) => joinDataSources(res))
       .then((mapResult) => {
-        setLoading(false);
         setSearchResults(mapResult.joinedDataMap);
         prev = mapResult.joinedDataMap;
         return mapResult.unMatchedMap;
       })
       .then((unMatchedData) => iterateOverYelpMap(unMatchedData))
       .then((moreJoinedData) => {
-      const newDataState = joinTwoMaps(prev, moreJoinedData);
-      setSearchResults(newDataState);
-    })
+        const newDataState = joinTwoMaps(prev, moreJoinedData);
+        setSearchResults(newDataState);
+        setLoading(false);
+      })
   }
 
   useEffect(() => {
