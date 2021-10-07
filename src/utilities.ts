@@ -34,3 +34,13 @@ export const createdJoinedMapWithGoogleData = async (googleResults: Array<Google
   }
   return joinedMap;
 }
+
+
+export const createReadableUrl = (fullUrl: String) => {
+  const matches = fullUrl.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  const domain =  matches && matches[1]
+  if(domain && domain?.length > 0 && domain.startsWith("www.")){
+    return domain.slice(4);
+  }
+  return domain;
+}

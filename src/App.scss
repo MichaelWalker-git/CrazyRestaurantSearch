@@ -20,3 +20,25 @@ h1 {
     width: 100%;
   }
 }
+
+img.card-img-top {
+  max-width: 25vw;
+  max-height: 24vh;
+  display: flex;
+  object-fit: cover;
+}
+
+@media only screen and (max-width: 600px) {
+  img.card-img-top {
+    max-height: 4rem;
+  }
+}
+
+span.headerTitle {
+  font-size: 26px;
+}
+
+.rbt.typeAheadClass {
+  width: 25vw;
+}
+

@@ -14,6 +14,56 @@
 
 For this exercise, you will be creating a mini React web application to display search results from Yelp’s Business Search API and Google’s Places API to provide a side-by-side comparison of local businesses.
 
+# Design Document for Styling/ UI Interaction
+### Images 
+- To fit the wire frame's uniform image size, I was faced with cropping photos or stretching them to size
+#### Pros:
+- Cropping retains image quality
+- Maintains the essence of all landscape photos
+#### Cons
+- Portrait photos have the highest misses for the essence of the photos
+
+#### Other options
+- Iterate through the photos to find landscape photos
+
+#### Pros:
+- Less likely to have those vertical misses
+
+#### Cons:
+- Longer stichign process for APIs and rendering. Poor User experience?
+
+# Design Document for API calls
+
+- The search bar will autocomplete a city or address, using the google places API
+- We will then make a query for Yelp
+
+## Option 1: Query Google Places for search results for that cuisine + location
+
+### Pros:
+- 2 API calls
+- Stich together the data and showcase that onto the page
+### Cons:
+- Missing data point from Google
+- Using a hard coded radius map
+
+Yelp API needs: city and term
+Google API
+
+
+## Option 2: Query each yelp result to Google places to find the reviews, google rating and google image
+### Pros:
+- Accurate
+
+### Cons:
+- Slow
+- Iterate through n number of Yelp results
+- n number of API calls
+
+
+
+------
+
+
 ## Requirements
 
 1. Using text inputs, the user should be able to query Yelp and/or Google using a search _term_ and _location_.
@@ -161,29 +211,3 @@ npm run convert-to-typescript
 See the section in this `README` on TypeScript for more information about why this script exists.
 
 
-
-# Design Document for API calls
-
-- The search bar will autocomplete a city or address, using the google places API
-- We will then make a query for Yelp
-
-## Option 1: Query Google Places for search results for that cuisine + location
-
-### Pros: 
-- 2 API calls
-- Stich together the data and showcase that onto the page
-### Cons:
-- Missing data point from Google
-
-Yelp API needs: city and term
-Google API
-
-
-## Option 2: Query each yelp result to Google places to find the reviews, google rating and google image
-### Pros: 
-- Accurate
-
-### Cons:
-- Slow
-- Iterate through n number of Yelp results
-- n number of API calls
