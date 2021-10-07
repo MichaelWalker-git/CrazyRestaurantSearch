@@ -20,3 +20,10 @@ h1 {
     width: 100%;
   }
 }
+
+img.card-img-top {
+  max-width: 25vw;
+  max-height: 17vh;
+  display: flex;
+  object-fit: cover;
+}
