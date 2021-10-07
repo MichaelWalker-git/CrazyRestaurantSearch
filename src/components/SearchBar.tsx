@@ -3,10 +3,10 @@ import React, {createRef, useMemo, useState} from "react";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import {getLatLong, getLocationAutoComplete} from "../service/googleMapService";
 import debounce from "lodash.debounce";
-import {Button, FormControl, InputGroup} from "react-bootstrap";
+import {Button, Container, FormControl, InputGroup, Row, Col} from "react-bootstrap";
 
 interface SearchBarProps {
-  handleSearchResults: (a: Map<string, Array<YelpBusiness|GoogleBusiness>>) => void;
+  handleSearchResults: (a: Map<string, Array<YelpBusiness | GoogleBusiness>>) => void;
   callYelpAndGoogle: () => void;
   latLong: Array<string>;
   searchAreaTerm: Array<string>;
@@ -40,7 +40,7 @@ export const SearchBar = (props: SearchBarProps) => {
     if (!menuOpen && selectedVal) {
       props.setSearchAreaValues([selectedVal || props.searchAreaTerm[0]]);
       getLatLong(selectedVal).then((res) => {
-        const { lng, lat } = res.results[0].geometry.location;
+        const {lng, lat} = res.results[0].geometry.location;
         props.setLatLongValues([lng, lat]);
       });
     }
@@ -68,35 +68,47 @@ export const SearchBar = (props: SearchBarProps) => {
   }
 
   return (
-    <InputGroup className="mb-3">
-      <InputGroup.Text>Find:</InputGroup.Text>
-      <FormControl
-        placeholder="Find..."
-        aria-label="Find what?"
-        as={"input"}
-        aria-describedby="basic-addon2"
-        type={"text"}
-        value={props.searchBoxTerm}
-        onKeyDown={handleKeyDown}
-        onChange={(evt) => props.setSearchTermValues(evt.target.value)}
-      />
-      <InputGroup.Text>Nearby:</InputGroup.Text>
-      <AsyncTypeahead
-        defaultSelected={props.searchAreaTerm}
-        id="selections-example"
-        onSearch={(text: string) => { debouncedChangeHandler(text); }}
-        options={options}
-        ref={selectLocationDropdown}
-        placeholder="Choose a city..."
-        isLoading={isLoading}
-        onMenuToggle={handleMenuClose}
-        onFocus={clearLocationInput}
-      />
-      <Button
-        variant="outline-secondary"
-        id="button-addon2"
-        onClick={handleSearch}>Search
-      </Button>
-    </InputGroup>
+      <Row>
+        <Col xl={5}> <InputGroup className="mb-3">
+          <InputGroup.Text>Find:</InputGroup.Text>
+          <FormControl
+            placeholder="Find..."
+            aria-label="Find what?"
+            as={"input"}
+            aria-describedby="basic-addon2"
+            type={"text"}
+            value={props.searchBoxTerm}
+            onKeyDown={handleKeyDown}
+            onChange={(evt) => props.setSearchTermValues(evt.target.value)}
+          />
+        </InputGroup>
+        </Col>
+        <Col xl={5}>
+          <InputGroup className="mb-3">
+            <InputGroup.Text>Nearby:</InputGroup.Text>
+            <AsyncTypeahead
+              className={"typeAheadClass"}
+              defaultSelected={props.searchAreaTerm}
+              id="selections-example"
+              onSearch={(text: string) => {
+                debouncedChangeHandler(text);
+              }}
+              options={options}
+              ref={selectLocationDropdown}
+              placeholder="Choose a city..."
+              isLoading={isLoading}
+              onMenuToggle={handleMenuClose}
+              onFocus={clearLocationInput}
+            />
+          </InputGroup>
+        </Col>
+        <Col xl={1}>
+          <Button
+            variant="success"
+            id="button-addon2"
+            onClick={handleSearch}>Search
+          </Button>
+        </Col>
+      </Row>
   );
 }
