@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from './logo.png';
 import './App.scss';
-import { getYelpResults } from './service/yelpService';
+import {getYelpResults} from './service/yelpService';
 import {
-  getGoogleRestaurantResults
+  getGoogleRestaurantResults, getSearchQueryPrediction
 } from './service/googleMapService';
-import { Dropdown} from 'react-bootstrap';
+import {Dropdown} from 'react-bootstrap';
 import {GoogleBusiness, YelpBusiness} from './types';
-import { joinDataSources } from './utilities';
-import { SearchResultBody } from './components/SearchResultBody';
+import {iterateOverYelpMap, joinDataSources, joinTwoMaps} from './utilities';
+import {SearchResultBody} from './components/SearchResultBody';
 import {SearchBar} from "./components/SearchBar";
+import {callYelpAndGoogle} from "./service/mergeYelpAndGoogleData";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("Restaurants");
   const [searchArea, setSearchArea] = useState(["San Francisco, CA"])
-  const [searchResults, setSearchResults] = useState<Map<string, Array<YelpBusiness|GoogleBusiness>>>(new Map());
+  const [searchResults, setSearchResults] = useState<Map<string, Array<YelpBusiness | GoogleBusiness>>>(new Map());
   const [latLongSelectedCity, setLatLong] = useState(["-122.4194", "37.7749"]);
   const [isLoading, setLoading] = useState(false);
 
-  const callYelpAndGoogle = () => {
-    setLoading(true);
-    Promise.all([
-      getYelpResults(searchTerm, latLongSelectedCity[0], latLongSelectedCity[1]),
-      getGoogleRestaurantResults(`${latLongSelectedCity[1]},${latLongSelectedCity[0]}`,searchTerm )
-    ])
-      .then((res) => joinDataSources(res))
-      .then((mapResult) => {
-        setLoading(false);
-        setSearchResults(mapResult);
-      })
+  const [prediction, setPrediction] = useState([]);
+
+  const handleSearchAndJoin = () => {
+    callYelpAndGoogle(
+      setLoading,
+      setPrediction,
+      setSearchResults,
+      searchTerm,
+      latLongSelectedCity,
+    )
   }
 
   useEffect(() => {
-    callYelpAndGoogle();
+    handleSearchAndJoin();
   }, [])
 
-  const handleSearchResults = (searchResultFromButton: Map<string, Array<YelpBusiness|GoogleBusiness>>) => {
+  const handleSearchResults = (searchResultFromButton: Map<string, Array<YelpBusiness | GoogleBusiness>>) => {
     setSearchResults(searchResultFromButton);
   }
 
@@ -43,8 +43,8 @@ function App() {
     <div className="App">
       <header>
         <a href="https://www.intellimize.com/" target="_blank"
-          rel="noopener noreferrer">
-          <img src={logo} alt="logo" />
+           rel="noopener noreferrer">
+          <img src={logo} alt="logo"/>
         </a>
       </header>
       <main className={"mainBody"}>
@@ -56,13 +56,15 @@ function App() {
             latLong={latLongSelectedCity}
             setSearchAreaValues={setSearchArea}
             setLatLongValues={setLatLong}
-            callYelpAndGoogle={callYelpAndGoogle}
-            setSearchTermValues={setSearchTerm} />
+            callYelpAndGoogle={handleSearchAndJoin}
+            setSearchTermValues={setSearchTerm}/>
           <span className={"headerTitle"}>Showing <b>{searchTerm}</b> near <b>{searchArea}</b> </span>
-          <Dropdown.Divider />
+          <Dropdown.Divider/>
           <SearchResultBody searchResults={searchResults}
-            callDefaultSearch={callYelpAndGoogle}
+                            callLastSearch={handleSearchAndJoin}
                             isLoading={isLoading}
+                            prediction={prediction}
+                            setSearchTerm={setSearchTerm}
           />
         </div>
       </main>

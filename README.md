@@ -10,7 +10,7 @@
 - Run ```npm run start``` on root directory
 
 ### Preview
-![Preview](https://user-images.githubusercontent.com/11032490/136265571-a6484db7-dda9-4e80-8169-444a146d508e.gif)
+![Yelp_Google_Restaurant_Revision_2](https://user-images.githubusercontent.com/11032490/136617545-7743733b-833a-40db-9fde-6e7080f359bd.gif)
 
 For this exercise, you will be creating a mini React web application to display search results from Yelp’s Business Search API and Google’s Places API to provide a side-by-side comparison of local businesses.
 
@@ -30,20 +30,25 @@ For this exercise, you will be creating a mini React web application to display 
 - Less likely to have those vertical misses
 
 #### Cons:
-- Longer stichign process for APIs and rendering. Poor User experience?
+- Longer stiching process for APIs and rendering. Poor User experience?
+
+---------
 
 # Design Document for API calls
 
-- The search bar will autocomplete a city or address, using the google places API
+- The search bar will autocomplete a city or address, using the Google places API
 - We will then make a query for Yelp
+- On 10/7, after getting feedback on limited results, it is realized that Option #2 is more important.
 
 ## Option 1: Query Google Places for search results for that cuisine + location
 
 ### Pros:
 - 2 API calls
-- Stich together the data and showcase that onto the page
+- Stitch together the data and showcase that onto the page
+
 ### Cons:
-- Missing data point from Google
+- Missing data point from Google === limited results
+- Creates situation where no results will 
 - Using a hard coded radius map
 
 Yelp API needs: city and term
@@ -55,7 +60,7 @@ Google API
 - Accurate
 
 ### Cons:
-- Slow
+- Possibly slow
 - Iterate through n number of Yelp results
 - n number of API calls
 
