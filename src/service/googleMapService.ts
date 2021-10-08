@@ -43,3 +43,12 @@ export const getIndividualGoogleRestaurant = async (query: string) => {
     console.error("getIndividualGoogleRestaurant", error);
   }
 }
+
+export const getSearchQueryPrediction = async (latLong: string, query: string) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/queryautocomplete/json?input=${query}&location=${latLong}&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}&key=${process.env.REACT_APP_GOOGLE_API}`);
+    return res.json();
+  } catch (error) {
+    console.error("getSearchQueryPrediction", error);
+  }
+}

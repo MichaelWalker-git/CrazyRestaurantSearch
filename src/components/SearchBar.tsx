@@ -3,7 +3,7 @@ import React, {createRef, useMemo, useState} from "react";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import {getLatLong, getLocationAutoComplete} from "../service/googleMapService";
 import debounce from "lodash.debounce";
-import {Button, Container, FormControl, InputGroup, Row, Col} from "react-bootstrap";
+import {Button, FormControl, InputGroup, Row, Col} from "react-bootstrap";
 
 interface SearchBarProps {
   handleSearchResults: (a: Map<string, Array<YelpBusiness | GoogleBusiness>>) => void;

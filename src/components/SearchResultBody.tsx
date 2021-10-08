@@ -1,7 +1,7 @@
 import {GoogleBusiness, YelpBusiness} from "../types";
 import React from "react";
 import { BusinessResult } from './BusinessResult';
-import {Spinner} from "react-bootstrap";
+import {Col, Row, Spinner} from "react-bootstrap";
 
 interface SearchResultBodyProps {
   searchResults: Map<string, Array<YelpBusiness | GoogleBusiness>>;
@@ -23,11 +23,15 @@ export const SearchResultBody = (props: SearchResultBodyProps) => {
       {!props.isLoading && props.searchResults?.size === 0 && (
         <>
           <span>No results available</span>
-          <div>Try <a href={""} onClick={props.callDefaultSearch}> Restaurants in San Francisco </a>
+          <div>Try <a onClick={props.callDefaultSearch}> Restaurants in San Francisco </a>
           </div>
         </>
       )}
-      {props.isLoading && (<Spinner animation="border" />)}
+      {props.isLoading && (
+        <Row>
+          <Col md={{ span: 3, offset: 5 }}><Spinner animation="border" /></Col>
+        </Row>
+        )}
     </div>
   );
 }

@@ -27,13 +27,13 @@ export const BusinessResult = (props: BusinessResultProps) => {
             <Row>
               <Card.Title>{name} : {location.address1}, {location.city}, {location.state} {location.zip_code}  - <a href={website}>{createReadableUrl(website)}</a> </Card.Title>
               <Col>
-                <Card.Subtitle><b>Yelp Rating:</b> {rating} of 5 stars ({review_count} total reviews)</Card.Subtitle>
+                <Card.Subtitle><b>Yelp Rating:</b> {rating || "NA"} of 5 stars ({review_count || "0"} total reviews)</Card.Subtitle>
                 <Card.Img variant="top"
                           data-failover="/assets/yelpImgNotFound.jpg"
                           src={yelpUrl} />
               </Col>
               <Col>
-                <Card.Subtitle><b>Google Rating:</b> {googleRating} of 5 stars ({user_ratings_total} total reviews)</Card.Subtitle>
+                <Card.Subtitle><b>Google Rating:</b> {googleRating || "NA"} of 5 stars ({user_ratings_total || "0"} total reviews)</Card.Subtitle>
                 <Card.Img variant="top"
                           data-failover="/assets/googleImgNotFound.jpg"
                           src={googleUrl} />
