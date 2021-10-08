@@ -1,3 +1,4 @@
+import {GoogleNearByResponse} from "../types";
 
 export const getLocationAutoComplete = async (locationText: string) => {
   try {
@@ -17,12 +18,13 @@ export const getLatLong = async (locationQuery: string) => {
   }
 }
 
-export const getGoogleRestaurantResults = async (latLong: string, query: string) => {
+export const getGoogleRestaurantResults = async (latLong: string, query: string):  Promise<GoogleNearByResponse> => {
   try {
     const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/nearbysearch/json?keyword=${query}&location=${latLong}&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}&key=${process.env.REACT_APP_GOOGLE_API}`);
     return res.json();
   } catch (error) {
     console.error("getGoogleRestaurantResults", error);
+    return error;
   }
 }
 

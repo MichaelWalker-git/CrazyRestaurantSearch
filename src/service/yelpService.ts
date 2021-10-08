@@ -1,4 +1,6 @@
-export const getYelpResults = async (searchTerm: string, long: string, lat: string) => {
+import {YelpBusinessSearchResponse} from "../types";
+
+export const getYelpResults = async (searchTerm: string, long: string, lat: string) : Promise<YelpBusinessSearchResponse> => {
   const RESULT_LIMIT = 50;
   const requestHeaders = {
     'headers': {
@@ -10,5 +12,6 @@ export const getYelpResults = async (searchTerm: string, long: string, lat: stri
     return res.json();
   } catch (error) {
     console.error(error);
+    return error;
   }
 }

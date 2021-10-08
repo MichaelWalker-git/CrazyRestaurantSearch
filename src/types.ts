@@ -65,6 +65,18 @@ export interface GoogleBusiness {
   website?: string;
 }
 
+export interface GoogleNearByResponse {
+  results: Array<GoogleBusiness>;
+  status: string;
+}
+
+export interface YelpBusinessSearchResponse {
+  businesses: Array<YelpBusiness>,
+  total: number,
+}
+
+export type PromiseAllGetAllYelpAndGoogleResults = [YelpBusinessSearchResponse,GoogleNearByResponse];
+
 interface GoogleBusinessPhotos {
   height: number;
   html_attributions: Array<string>;
@@ -80,3 +92,18 @@ export interface JoinedDataAndUnMatchedData {
   joinedDataMap: JoinedYelpGoogleData;
   unMatchedMap: UnMatchedYelpMap;
 }
+
+export interface PredictionResponse {
+  description: string,
+  matched_substrings: Array<PredictionString>
+  place_id: string,
+  reference: string,
+  terms: Array<PredictionString>,
+  structured_formatting: {
+    main_text: string,
+    main_text_matched_substring: Array<PredictionString>
+  },
+  types: Array<string>,
+}
+
+interface PredictionString {length: number, offset: number}

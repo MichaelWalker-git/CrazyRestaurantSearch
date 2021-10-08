@@ -3,12 +3,12 @@ import {
   YelpBusiness,
   JoinedDataAndUnMatchedData,
   UnMatchedYelpMap,
-  JoinedYelpGoogleData
+  JoinedYelpGoogleData, PromiseAllGetAllYelpAndGoogleResults
 } from "./types";
 import {getGoogleDetail, getIndividualGoogleRestaurant} from "./service/googleMapService";
 
 export const joinDataSources =
-  (res: [{ businesses: Array<YelpBusiness> }, { results: Array<GoogleBusiness> }]) : Promise<JoinedDataAndUnMatchedData> => {
+  (res: PromiseAllGetAllYelpAndGoogleResults) : Promise<JoinedDataAndUnMatchedData> => {
   const yelpResults = res[0].businesses;
   const googleResults = res[1].results;
   const resultMap = fillMapWithYelpData(yelpResults)

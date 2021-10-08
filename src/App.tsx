@@ -3,13 +3,14 @@ import logo from './logo.png';
 import './App.scss';
 import {getYelpResults} from './service/yelpService';
 import {
-  getGoogleRestaurantResults
+  getGoogleRestaurantResults, getSearchQueryPrediction
 } from './service/googleMapService';
 import {Dropdown} from 'react-bootstrap';
 import {GoogleBusiness, YelpBusiness} from './types';
 import {iterateOverYelpMap, joinDataSources, joinTwoMaps} from './utilities';
 import {SearchResultBody} from './components/SearchResultBody';
 import {SearchBar} from "./components/SearchBar";
+import {callYelpAndGoogle} from "./service/mergeYelpAndGoogleData";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("Restaurants");
@@ -18,29 +19,20 @@ function App() {
   const [latLongSelectedCity, setLatLong] = useState(["-122.4194", "37.7749"]);
   const [isLoading, setLoading] = useState(false);
 
-  const callYelpAndGoogle = () => {
-    setLoading(true);
-    let prev: any;
-    Promise.all([
-      getYelpResults(searchTerm, latLongSelectedCity[0], latLongSelectedCity[1]),
-      getGoogleRestaurantResults(`${latLongSelectedCity[1]},${latLongSelectedCity[0]}`, searchTerm)
-    ])
-      .then((res) => joinDataSources(res))
-      .then((mapResult) => {
-        setSearchResults(mapResult.joinedDataMap);
-        prev = mapResult.joinedDataMap;
-        return mapResult.unMatchedMap;
-      })
-      .then((unMatchedData) => iterateOverYelpMap(unMatchedData))
-      .then((moreJoinedData) => {
-        const newDataState = joinTwoMaps(prev, moreJoinedData);
-        setSearchResults(newDataState);
-        setLoading(false);
-      })
+  const [prediction, setPrediction] = useState([]);
+
+  const handleSearchAndJoin = () => {
+    callYelpAndGoogle(
+      setLoading,
+      setPrediction,
+      setSearchResults,
+      searchTerm,
+      latLongSelectedCity,
+    )
   }
 
   useEffect(() => {
-    callYelpAndGoogle();
+    handleSearchAndJoin();
   }, [])
 
   const handleSearchResults = (searchResultFromButton: Map<string, Array<YelpBusiness | GoogleBusiness>>) => {
@@ -64,13 +56,15 @@ function App() {
             latLong={latLongSelectedCity}
             setSearchAreaValues={setSearchArea}
             setLatLongValues={setLatLong}
-            callYelpAndGoogle={callYelpAndGoogle}
+            callYelpAndGoogle={handleSearchAndJoin}
             setSearchTermValues={setSearchTerm}/>
           <span className={"headerTitle"}>Showing <b>{searchTerm}</b> near <b>{searchArea}</b> </span>
           <Dropdown.Divider/>
           <SearchResultBody searchResults={searchResults}
-                            callDefaultSearch={callYelpAndGoogle}
+                            callLastSearch={handleSearchAndJoin}
                             isLoading={isLoading}
+                            prediction={prediction}
+                            setSearchTerm={setSearchTerm}
           />
         </div>
       </main>
