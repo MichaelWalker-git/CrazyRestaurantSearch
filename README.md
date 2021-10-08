@@ -10,7 +10,7 @@
 - Run ```npm run start``` on root directory
 
 ### Preview
-![Preview](https://user-images.githubusercontent.com/11032490/136265571-a6484db7-dda9-4e80-8169-444a146d508e.gif)
+![Yelp_Google_Restaurant_Revision_2](https://user-images.githubusercontent.com/11032490/136617545-7743733b-833a-40db-9fde-6e7080f359bd.gif)
 
 For this exercise, you will be creating a mini React web application to display search results from Yelp’s Business Search API and Google’s Places API to provide a side-by-side comparison of local businesses.
 
