@@ -1,4 +1,4 @@
-import {GoogleNearByResponse} from "../types";
+import {GoogleNearByResponse, PromiseWithCancel} from "../types";
 
 export const getLocationAutoComplete = async (locationText: string) => {
   try {
@@ -37,13 +37,18 @@ export const getGoogleDetail = async (googlePlaceId: string) => {
   }
 }
 
-export const getIndividualGoogleRestaurant = async (query: string) => {
-  try {
-    const res = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/findplacefromtext/json?input=${query}&inputtype=textquery&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}&key=${process.env.REACT_APP_GOOGLE_API}`);
-    return res.json();
-  } catch (error) {
-    console.error("getIndividualGoogleRestaurant", error);
-  }
+export const getIndividualGoogleRestaurant = (query: string) => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const promise = new Promise(async (resolve) => {
+    const response = await fetch(`${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/findplacefromtext/json?input=${query}&inputtype=textquery&radius=${process.env.REACT_APP_DEFAULT_RADIUS_METERS}&key=${process.env.REACT_APP_GOOGLE_API}`, {
+      signal,
+    });
+    const data = await response.json();
+    resolve(data);
+  });
+  (promise as PromiseWithCancel<any>).cancel = () => controller.abort();
+  return promise as PromiseWithCancel<any>;
 }
 
 export const getSearchQueryPrediction = async (latLong: string, query: string) => {

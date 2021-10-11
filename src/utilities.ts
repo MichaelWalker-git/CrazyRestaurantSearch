@@ -3,7 +3,7 @@ import {
   YelpBusiness,
   JoinedDataAndUnMatchedData,
   UnMatchedYelpMap,
-  JoinedYelpGoogleData, PromiseAllGetAllYelpAndGoogleResults
+  JoinedYelpGoogleData, PromiseAllGetAllYelpAndGoogleResults, PromiseWithCancel
 } from "./types";
 import {getGoogleDetail, getIndividualGoogleRestaurant} from "./service/googleMapService";
 
@@ -27,7 +27,9 @@ export const fillMapWithYelpData = (yelpResults: Array<YelpBusiness>) => {
 }
 
 export const createdJoinedMapWithGoogleData =
-  async (googleResults: Array<GoogleBusiness>, resultMap: Map<string, Array<YelpBusiness>>): Promise<JoinedDataAndUnMatchedData> => {
+  async (googleResults: Array<GoogleBusiness>,
+         resultMap: Map<string, Array<YelpBusiness>>,
+  ): Promise<JoinedDataAndUnMatchedData> => {
   const joinedMap = new Map();
   for (let j = 0; j < googleResults?.length; j++) {
     const firstPartAddress = googleResults[j].vicinity.split(",")[0];
@@ -57,11 +59,16 @@ export const createReadableUrl = (fullUrl: String) => {
   return domain;
 }
 
-export const iterateOverYelpMap = async (yelpMap: UnMatchedYelpMap) : Promise<JoinedYelpGoogleData> => {
+export const iterateOverYelpMap = async (
+  yelpMap: UnMatchedYelpMap,
+  setQuery: (value: (((prevState: (PromiseWithCancel<any> | undefined)) => (PromiseWithCancel<any> | undefined)) | PromiseWithCancel<any> | undefined)) => void
+  ) : Promise<JoinedYelpGoogleData> => {
   const joinedMap = new Map();
   for (const [mapKey, yelpData] of yelpMap) {
     const fullAddress = ` ${yelpData[0].name} ${yelpData[0].location.address1}`;
-    await getIndividualGoogleRestaurant(fullAddress).then((res) =>{
+    const googleRestaurants = getIndividualGoogleRestaurant(fullAddress);
+    setQuery(googleRestaurants);
+    googleRestaurants.then((res) =>{
       if(res?.candidates.length > 0){
         getGoogleDetail(res.candidates[0].place_id).then(googleBiz => {
           joinedMap.set(mapKey, [yelpData[0], googleBiz.result])

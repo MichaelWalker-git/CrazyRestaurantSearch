@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import logo from './logo.png';
 import './App.scss';
 import {Dropdown} from 'react-bootstrap';
-import {GoogleBusiness, YelpBusiness} from './types';
+import {GoogleBusiness, PromiseWithCancel, YelpBusiness} from './types';
 import {SearchResultBody} from './components/SearchResultBody';
 import {SearchBar} from "./components/SearchBar";
 import {callYelpAndGoogle} from "./service/mergeYelpAndGoogleData";
@@ -13,16 +13,19 @@ function App() {
   const [searchResults, setSearchResults] = useState<Map<string, Array<YelpBusiness | GoogleBusiness>>>(new Map());
   const [latLongSelectedCity, setLatLong] = useState(["-122.4194", "37.7749"]);
   const [isLoading, setLoading] = useState(false);
+  const [followUpQuery, setQuery] = React.useState<PromiseWithCancel<any> | undefined>(undefined);
 
   const [prediction, setPrediction] = useState([]);
 
   const handleSearchAndJoin = () => {
+    followUpQuery?.cancel();
     callYelpAndGoogle(
       setLoading,
       setPrediction,
       setSearchResults,
       searchTerm,
       latLongSelectedCity,
+      setQuery,
     )
   }
 

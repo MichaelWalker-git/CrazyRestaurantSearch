@@ -3,9 +3,10 @@ import {getGoogleRestaurantResults, getSearchQueryPrediction} from "./googleMapS
 import {iterateOverYelpMap, joinDataSources, joinTwoMaps} from "../utilities";
 import {
   GoogleBusiness, JoinedDataAndUnMatchedData, JoinedYelpGoogleData,
-  PromiseAllGetAllYelpAndGoogleResults, UnMatchedYelpMap,
+  PromiseAllGetAllYelpAndGoogleResults, PromiseWithCancel, UnMatchedYelpMap,
   YelpBusiness
 } from "../types";
+import React from "react";
 
 export const callYelpAndGoogle = (
   setLoading: (a: boolean) => void,
@@ -13,6 +14,7 @@ export const callYelpAndGoogle = (
   setSearchResults: (a: Map<string, Array<YelpBusiness | GoogleBusiness>>) => void,
   searchTerm: string,
   latLongSelectedCity: Array<string>,
+  setQuery: (value: (((prevState: (PromiseWithCancel<any> | undefined)) => (PromiseWithCancel<any> | undefined)) | PromiseWithCancel<any> | undefined)) => void
 ) => {
   setLoading(true);
   let prev: any;
@@ -28,7 +30,7 @@ export const callYelpAndGoogle = (
       prev = mapResult.joinedDataMap;
       return mapResult.unMatchedMap;
     })
-    .then((unMatchedData: UnMatchedYelpMap) => iterateOverYelpMap(unMatchedData))
+    .then((unMatchedData: UnMatchedYelpMap) => iterateOverYelpMap(unMatchedData, setQuery))
     .then((moreJoinedData: JoinedYelpGoogleData) => {
       const newDataState = joinTwoMaps(prev, moreJoinedData);
       setSearchResults(newDataState);
