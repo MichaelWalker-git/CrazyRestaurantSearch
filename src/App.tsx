@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import logo from './logo.png';
 import './App.scss';
-import {getYelpResults} from './service/yelpService';
-import {
-  getGoogleRestaurantResults, getSearchQueryPrediction
-} from './service/googleMapService';
 import {Dropdown} from 'react-bootstrap';
 import {GoogleBusiness, YelpBusiness} from './types';
-import {iterateOverYelpMap, joinDataSources, joinTwoMaps} from './utilities';
 import {SearchResultBody} from './components/SearchResultBody';
 import {SearchBar} from "./components/SearchBar";
 import {callYelpAndGoogle} from "./service/mergeYelpAndGoogleData";
