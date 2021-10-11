@@ -19,6 +19,10 @@ export const BusinessResult = (props: BusinessResultProps) => {
   const googleUrl = photoRef.length > 0 ? `${process.env.REACT_APP_PROXY_DOMAIN}google/maps/api/place/photo?maxwidth=400&photo_reference=${props.googleBiz?.photos[0]?.photo_reference}&key=${process.env.REACT_APP_GOOGLE_API}` : googleImgNotFound;
   const yelpUrl = image_url?.length > 0 ? image_url : yelpImgNotFound;
 
+  const handlePictureClick = (url: string | undefined) => {
+    window?.open(url, '_blank')?.focus();
+  }
+
   return (
     <>
       <Card>
@@ -29,12 +33,14 @@ export const BusinessResult = (props: BusinessResultProps) => {
               <Col>
                 <Card.Subtitle><b>Yelp Rating:</b> {rating || "NA"} of 5 stars ({review_count || "0"} total reviews)</Card.Subtitle>
                 <Card.Img variant="top"
+                          onClick={()=> handlePictureClick(props.yelpBiz.url)}
                           data-failover="/assets/yelpImgNotFound.jpg"
                           src={yelpUrl} />
               </Col>
               <Col>
                 <Card.Subtitle><b>Google Rating:</b> {googleRating || "NA"} of 5 stars ({user_ratings_total || "0"} total reviews)</Card.Subtitle>
                 <Card.Img variant="top"
+                          onClick={()=> handlePictureClick(props.googleBiz.url)}
                           data-failover="/assets/googleImgNotFound.jpg"
                           src={googleUrl} />
               </Col>

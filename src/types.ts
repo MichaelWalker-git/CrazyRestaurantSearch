@@ -32,7 +32,7 @@ export interface YelpBusiness {
   name: string;
   phone: string;
   price?: string;
-  rating: number
+  rating: number;
   review_count: Number;
   transactions: Array<string>;
   url: string;
@@ -60,7 +60,8 @@ export interface GoogleBusiness {
   reference: string;
   scope: string;
   types: Array<string>
-  user_ratings_total: number
+  user_ratings_total: number;
+  url?: string;
   vicinity: string;
   website?: string;
 }
