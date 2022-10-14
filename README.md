@@ -1,4 +1,8 @@
-# Intellimize Frontend Engineering Simulation
+# Description
+- This project combines both the Yelp and Google APIs to find the best restaurants in a given area.
+- It has autocomplete, and query adjustments. 
+- It crops photos to maintain quality. 
+- Built in 32-ish hours.
 
 ### Getting Started
 - Pull down package
